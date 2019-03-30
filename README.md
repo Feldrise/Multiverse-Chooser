@@ -10,4 +10,4 @@ Le logiciel va chercher la liste des joueurs dans un fichier en ligne, puis choi
 N'importe qui peut l'utiliser, mais le résultat n'est exploité que par les trois fée du RP.
 
 ## Ou trouver le RP ?
-Le RP se joue sur Discord, et voici [le lien d'invitation](https://discord.gg/gPCASWm) : (https://discord.gg/gPCASWm)[https://discord.gg/gPCASWm].
+Le RP se joue sur Discord, et voici [le lien d'invitation](https://discord.gg/gPCASWm) : [https://discord.gg/gPCASWm](https://discord.gg/gPCASWm).
