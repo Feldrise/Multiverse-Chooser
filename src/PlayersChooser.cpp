@@ -24,6 +24,10 @@ void PlayersChooser::choosePlayersRequested()
 
 void PlayersChooser::playerListDownloadProgress(qint64 read, qint64 total)
 {
+	// Avoid crash when offline! 
+	if (total == 0)
+		return;
+
 	// Update Window state with percent info
 	m_window->setState(GettingPlayers, tr("Getting players list (%1)").arg(QString::number((read / total) * 100)));
 }
