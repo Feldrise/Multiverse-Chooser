@@ -28,6 +28,7 @@ signals:
 
 private:
 	void setupUi();
+	void loadSkin();
 
 	QVBoxLayout* m_layout{};
 

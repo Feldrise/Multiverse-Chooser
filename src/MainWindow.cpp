@@ -1,6 +1,9 @@
 #include "MainWindow.hpp"
 
+#include <QApplication>
 #include <QMessageBox>
+
+#include <QDir>
 
 MainWindow::MainWindow(QWidget* parent) :
 	QWidget(parent)
@@ -11,6 +14,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
 	// UI things
 	setupUi();
+	loadSkin();
 	show();
 
 	// Connections
@@ -76,4 +80,27 @@ void MainWindow::setupUi()
 	m_layout->addWidget(m_pseudos);
 	m_layout->addWidget(m_stateLabel);
 	m_layout->addWidget(m_launchButton);
+}
+
+void MainWindow::loadSkin()
+{
+	// Load skin file
+	const QString fileName{"default.qss"};
+	QString path{QApplication::applicationDirPath() + QDir::separator() + "skins" + QDir::separator() + fileName};
+
+	// Load text in the file
+	if (!path.isEmpty()) {
+		QFile file{path};
+
+		// Open the file
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			QString style{file.readAll()};
+			file.close(); // Close the file
+
+			// Apply the skin
+			(dynamic_cast<QApplication *>(QCoreApplication::instance()))->setStyleSheet(style);
+		}
+		else
+			QMessageBox::warning(this, tr("Error"), tr("Unable to open skin file !"));
+	}
 }
