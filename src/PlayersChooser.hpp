@@ -2,9 +2,11 @@
 
 #include <QObject>
 
-#include <QList>
+#include <QStringList>
 
 #include <QNetworkReply>
+
+class MainWindow;
 
 class PlayersChooser: public QObject {
 	Q_OBJECT
@@ -17,17 +19,24 @@ public:
 		ChoosingPlayer
 	};
 
-	PlayersChooser(QObject* parent = nullptr);
+	PlayersChooser(MainWindow* window, QObject* parent = nullptr);
 	~PlayersChooser() = default;
 
+public slots:
+	void choosePlayersRequested();
+
 private slots:
+	void playerListDownloadProgress(qint64 read, qint64 total);
 	void playerListDownloaded();
 
 private:
 	void startDownloadPlayerList(const QUrl& url);
+	void getRandomPlayers();
 
 	QNetworkAccessManager* m_networkManager{};
 	QNetworkReply* m_playerListReply{};
 
-	QList<QString> m_availablePlayers{};
+	QStringList m_availablePlayers{};
+
+	MainWindow* m_window{};
 };

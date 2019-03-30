@@ -17,7 +17,8 @@ public:
 	MainWindow(QWidget* parent = nullptr);
 	~MainWindow() = default;
 
-	void setState(PlayersChooser::State& state, QString& message);
+	void setState(const PlayersChooser::State& state, const QString& message);
+	void showChoosedPlayers(const QStringList& players) const;
 
 private slots:
 	void choosePlayersClicked();
