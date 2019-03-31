@@ -6,19 +6,36 @@ QWidget {
 QTextBrowser {
     background: #379490;
     border: 1px solid #379490;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 8px;
 }
 
 QPushButton {
     background-color: #379490;
-    border-radius: 14px;
+    border-radius: 4px;
     padding: 8px;
 }
 
 QCheckBox::indicator {
     background-color: #379490;
-    border-radius: 9px;
+    border-radius: 4px;
     width: 18px;
     height: 18px;
+}
+
+QComboBox {
+    border: 1px solid #379490;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+QComboBox:drop-down {
+    background: transparent;
+}
+
+QComboBox QAbstractItemView {
+    background: #379490;
+    border: 1px solid #379490;
+    border-radius: 4px;
+    padding: 8px;
 }

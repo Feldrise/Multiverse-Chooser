@@ -1,0 +1,1 @@
+lupdate ..\src -ts "fr_FR.ts" -no-obsolete

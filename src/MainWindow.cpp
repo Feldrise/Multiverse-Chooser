@@ -25,11 +25,13 @@
 #include "MainWindow.hpp"
 
 #include <QApplication>
+#include <QTranslator>
 #include <QSettings>
 
 #include <QMessageBox>
 
 #include <QDir>
+#include <QLibraryInfo>
 
 MainWindow::MainWindow(QWidget* parent) :
 	QWidget(parent)
@@ -38,15 +40,20 @@ MainWindow::MainWindow(QWidget* parent) :
 	setWindowTitle(tr("Multiverse Chooser"));
 	setAttribute(Qt::WA_DeleteOnClose);
 
+	// Translation 
+	translateApp();
+
 	// UI things
 	setupUi();
 	show();
 
+	// Load settings
 	loadSettings();
 
 	// Connections
 	connect(m_whiteTheme, &QCheckBox::stateChanged, this, &MainWindow::switchTheme);
 	connect(m_launchButton, &QPushButton::clicked, this, &MainWindow::choosePlayersClicked);
+	connect(m_lang, &QComboBox::currentTextChanged, this, &MainWindow::changeLanguage);
 }
 
 void MainWindow::setState(const PlayersChooser::State& state, const QString& message)
@@ -103,6 +110,16 @@ void MainWindow::switchTheme()
 	loadSkin(name);
 }
 
+void MainWindow::changeLanguage(const QString& lang)
+{
+	QSettings settings{};
+	settings.setValue("Language/language", lang);
+
+	QMessageBox::information(this, tr("Information"), tr("You may need to restart the app!"));
+
+	translateApp();
+}
+
 void MainWindow::setupUi()
 {
 	// Resize the window
@@ -138,9 +155,40 @@ void MainWindow::loadSettings()
 {
 	QSettings settings{};
 
+	// Theme settings
 	const QString themeName = settings.value("currentTheme", "default").toString();
 
 	loadSkin(themeName);
+
+	// Translation settings
+	settings.beginGroup("Language");
+
+	QString activeLanguage = currentLanguage();
+
+	if (!activeLanguage.isEmpty() && activeLanguage != QLatin1String("en_US"))
+		m_lang->addItem(createLanguageItem(activeLanguage), activeLanguage);
+
+	m_lang->addItem("English (en_US)", "en_US");
+
+	QString translationPath{QApplication::applicationDirPath() + QDir::separator() + "locale"};
+	QDir lanDir{translationPath};
+	QStringList list = lanDir.entryList(QStringList("*.qm"));
+
+	foreach(const QString& name, list)
+	{
+		if (name.startsWith(QLatin1String("qt_")))
+			continue;
+
+		QString loc{name};
+		loc.remove(QLatin1String(".qm"));
+
+		if (loc == activeLanguage)
+			continue;
+
+		m_lang->addItem(createLanguageItem(loc), loc);
+	}
+
+	settings.endGroup();
 }
 
 void MainWindow::loadSkin(const QString& name)
@@ -164,4 +212,74 @@ void MainWindow::loadSkin(const QString& name)
 		else
 			QMessageBox::warning(this, tr("Error"), tr("Unable to open skin file !"));
 	}
+}
+
+void MainWindow::translateApp()
+{
+	QSettings settings{};
+	QString file{settings.value("Language/language", QLocale::system().name()).toString()};
+
+	// It can only be "C" locale, for which we will use default English language
+	if (file.size() < 2)
+		file.clear();
+
+	if (!file.isEmpty() && !file.endsWith(QLatin1String(".qm")))
+		file.append(QLatin1String(".qm"));
+
+	// Either we load default language (with empty file), or we attempt to load xx.qm (xx_yy.qm)
+	Q_ASSERT(file.isEmpty() || file.size() >= 5);
+
+	QString translationPath{QApplication::applicationDirPath() + QDir::separator() + "locale"};
+
+	if (!file.isEmpty()) {
+		if (!QFile(QString("%1/%2").arg(translationPath, file)).exists()) {
+			QDir dir{translationPath};
+			QString lang{file.left(2) + QLatin1String("*.qm")};
+
+			const QStringList translations = dir.entryList(QStringList(lang));
+
+			// If no translation can be found, we will use the default English
+			file = translations.isEmpty() ? QString() : translations[0];
+		}
+	}
+
+	// Application translations
+	QTranslator* app{new QTranslator(this)};
+	app->load(file, translationPath);
+
+	// Qt translations
+	QTranslator* sys{new QTranslator(this)};
+	sys->load("qt_" + file, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+
+	if (sys->isEmpty())
+		sys->load("qt_" + file, translationPath);
+
+	m_languageFile = file;
+
+	qApp->installTranslator(app);
+	qApp->installTranslator(sys);
+}
+
+QString MainWindow::createLanguageItem(const QString& lang)
+{
+	QLocale locale{lang};
+
+	if (locale.language() == QLocale::C)
+		return lang;
+
+	QString country{QLocale::countryToString(locale.country())};
+	QString language{QLocale::languageToString(locale.language())};
+
+	return QString("%1, %2 (%3)").arg(language, country, lang);
+}
+
+QString MainWindow::currentLanguage() const
+{
+	QString lang = m_languageFile;
+
+	if (lang.isEmpty()) {
+		return "en_US";
+	}
+
+	return lang.left(lang.length() - 3);
 }

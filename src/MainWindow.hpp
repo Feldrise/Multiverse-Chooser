@@ -49,16 +49,20 @@ public:
 
 private slots:
 	void choosePlayersClicked();
+	void switchTheme();
+	void changeLanguage(const QString& lang);
 
 signals:
 	void choosePlayersRequested();
 
 private:
-	void switchTheme();
-
 	void setupUi();
 	void loadSettings();
 	void loadSkin(const QString& name);
+
+	void translateApp();
+	QString createLanguageItem(const QString& lang);
+	QString currentLanguage() const;
 
 	QVBoxLayout* m_layout{};
 	QHBoxLayout* m_settingsLayout{};
@@ -70,4 +74,6 @@ private:
 
 	QCheckBox* m_whiteTheme{};
 	QComboBox* m_lang{};
+
+	QString m_languageFile{};
 };
