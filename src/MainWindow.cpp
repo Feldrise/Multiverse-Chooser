@@ -25,6 +25,8 @@
 #include "MainWindow.hpp"
 
 #include <QApplication>
+#include <QSettings>
+
 #include <QMessageBox>
 
 #include <QDir>
@@ -38,10 +40,12 @@ MainWindow::MainWindow(QWidget* parent) :
 
 	// UI things
 	setupUi();
-	loadSkin();
 	show();
 
+	loadSettings();
+
 	// Connections
+	connect(m_whiteTheme, &QCheckBox::stateChanged, this, &MainWindow::switchTheme);
 	connect(m_launchButton, &QPushButton::clicked, this, &MainWindow::choosePlayersClicked);
 }
 
@@ -83,12 +87,29 @@ void MainWindow::choosePlayersClicked()
 	emit choosePlayersRequested();
 }
 
+void MainWindow::switchTheme()
+{
+	// Get theme
+	QString name{"default"};
+
+	if (m_whiteTheme->isChecked())
+		name = "white";
+
+	// Save currentTheme
+	QSettings settings{};
+	settings.setValue("currentTheme", name);
+
+	// Load theme
+	loadSkin(name);
+}
+
 void MainWindow::setupUi()
 {
 	// Resize the window
 	resize(366, 262);
 
 	m_layout = new QVBoxLayout(this);
+	m_settingsLayout = new QHBoxLayout();
 
 	// Initialise widgets
 	m_description = new QLabel(tr("The mutiverse need to be rebalanced!"), this);
@@ -99,17 +120,33 @@ void MainWindow::setupUi()
 	m_stateLabel = new QLabel(this);
 	m_launchButton = new QPushButton(tr("REBALANCE"));
 
+	m_whiteTheme = new QCheckBox(tr("White Theme"), this);
+	m_lang = new QComboBox(this);
+
 	// Add widget into the layout
+	m_settingsLayout->addWidget(m_whiteTheme);
+	m_settingsLayout->addWidget(m_lang);
+
 	m_layout->addWidget(m_description);
+	m_layout->addLayout(m_settingsLayout);
 	m_layout->addWidget(m_pseudos);
 	m_layout->addWidget(m_stateLabel);
 	m_layout->addWidget(m_launchButton);
 }
 
-void MainWindow::loadSkin()
+void MainWindow::loadSettings()
+{
+	QSettings settings{};
+
+	const QString themeName = settings.value("currentTheme", "default").toString();
+
+	loadSkin(themeName);
+}
+
+void MainWindow::loadSkin(const QString& name)
 {
 	// Load skin file
-	const QString fileName{"default.qss"};
+	const QString fileName{name  + ".qss"};
 	QString path{QApplication::applicationDirPath() + QDir::separator() + "skins" + QDir::separator() + fileName};
 
 	// Load text in the file

@@ -27,10 +27,13 @@
 #include <QWidget>
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <QLabel>
 #include <QTextBrowser>
 #include <QPushButton>
+#include <QCheckBox>
+#include <QComboBox> 
 
 #include "PlayersChooser.hpp"
 
@@ -51,13 +54,20 @@ signals:
 	void choosePlayersRequested();
 
 private:
+	void switchTheme();
+
 	void setupUi();
-	void loadSkin();
+	void loadSettings();
+	void loadSkin(const QString& name);
 
 	QVBoxLayout* m_layout{};
+	QHBoxLayout* m_settingsLayout{};
 
 	QLabel* m_description{};
 	QTextBrowser* m_pseudos{};
 	QLabel* m_stateLabel{};
 	QPushButton* m_launchButton{};
+
+	QCheckBox* m_whiteTheme{};
+	QComboBox* m_lang{};
 };

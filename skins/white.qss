@@ -1,0 +1,27 @@
+QWidget {
+    background: #F2F5F4;
+    color: #000000;
+}
+
+QTextBrowser {
+    background: #295E93;
+    color: #ffffff;
+    border: 1px solid #295E93;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+QPushButton {
+    background-color: #295E93;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 8px;
+}
+
+QCheckBox::indicator {
+    background-color: black;
+    border: 4px solid #295E93;
+    border-radius: 9px;
+    width: 12px;
+    height: 12px;
+}

@@ -33,6 +33,10 @@ int main(int argc, char** argv)
 {
 	qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
 
+	QCoreApplication::setOrganizationName(QLatin1String("Feldrise"));
+	QCoreApplication::setApplicationName(QLatin1String("MultiverseChooser"));
+	QCoreApplication::setApplicationVersion(QLatin1String("1.0.2"));
+
 	QApplication app{argc, argv};
 
 	MainWindow* window{new MainWindow()};
