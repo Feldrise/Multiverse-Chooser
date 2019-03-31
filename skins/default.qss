@@ -1,3 +1,4 @@
+/*
 QWidget {
     background: #242327;
     color: #ffffff;
@@ -14,4 +15,23 @@ QPushButton {
     background-color: #379490;
     border-radius: 16px;
     padding: 16px;
+}
+*/
+
+QWidget {
+    background: #242327;
+    color: #ffffff;
+}
+
+QTextBrowser {
+    background: #379490;
+    border: 1px solid #379490;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+QPushButton {
+    background-color: #379490;
+    border-radius: 8px;
+    padding: 8px;
 }

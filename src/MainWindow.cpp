@@ -86,12 +86,12 @@ void MainWindow::choosePlayersClicked()
 void MainWindow::setupUi()
 {
 	// Resize the window
-	resize(732, 524);
+	resize(366, 262);
 
 	m_layout = new QVBoxLayout(this);
 
 	// Initialise widgets
-	m_description = new QLabel(tr("The mutiverse need to be rebalance!"), this);
+	m_description = new QLabel(tr("The mutiverse need to be rebalanced!"), this);
 
 	m_pseudos = new QTextBrowser(this);
 	m_pseudos->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
