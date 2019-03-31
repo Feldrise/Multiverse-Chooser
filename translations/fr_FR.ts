@@ -32,7 +32,7 @@
     <message>
         <location filename="../src/MainWindow.cpp" line="132"/>
         <source>The mutiverse need to be rebalanced!</source>
-        <translation>Le multivers à besoin d&apos;être rééquilibré !</translation>
+        <translation type="unfinished">Le multivers a besoin d&apos;être rééquilibré !</translation>
     </message>
     <message>
         <location filename="../src/MainWindow.cpp" line="138"/>
@@ -42,7 +42,7 @@
     <message>
         <location filename="../src/MainWindow.cpp" line="140"/>
         <source>White Theme</source>
-        <translation>Thème claire</translation>
+        <translation type="unfinished">Thème clair</translation>
     </message>
     <message>
         <location filename="../src/MainWindow.cpp" line="213"/>
